@@ -11,12 +11,9 @@ const (
 	ILLEGAL TokenType = "ILLEGAL"
 	EOF     TokenType = "EOF"
 
-	// Identifiers + literals
-	IDENT  TokenType = "IDENT"
-	INT    TokenType = "INT"
-	STRING TokenType = "STRING"
+	IDENT TokenType = "IDENT"
+	INT   TokenType = "INT"
 	// Operators
-	ASSIGN   TokenType = "="
 	PLUS     TokenType = "+"
 	MINUS    TokenType = "-"
 	MULTIPLY TokenType = "*"
@@ -36,4 +33,20 @@ const (
 
 func NewToken(tokenType TokenType, ch byte) Token {
 	return Token{Type: tokenType, Literal: string(ch)}
+}
+
+// mapping given word to tokenType
+var keywords = map[string]TokenType{
+	"FUNCTION": FUNCTION,
+	"DEFINE":   DEFINE,
+	"LET":      LET,
+	"COND":     COND,
+	"IF":       IF,
+}
+
+func LookupWord(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
 }
