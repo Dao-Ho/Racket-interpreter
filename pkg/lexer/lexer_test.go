@@ -10,14 +10,14 @@ func TestNextToken_SingleSymbol(t *testing.T) {
 
 	lexer := NewLexer(input)
 
-	token := lexer.NextToken()
+	tok := lexer.NextToken()
 
-	if token.Type != token.PLUS {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.PLUS, token.Type)
+	if tok.Type != token.PLUS {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.PLUS, tok.Type)
 	}
 
-	if token.Literal != "+" {
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "+", token.Literal)
+	if tok.Literal != "+" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "+", tok.Literal)
 	}
 }
 
@@ -26,59 +26,62 @@ func TestNextToken_Expression(t *testing.T) {
 
 	lexer := NewLexer(input)
 
-	token := lexer.NextToken()
+	tok := lexer.NextToken()
 
-	if token.Type != token.LEFT_PAREN {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.LEFT_PAREN, token.Type)
+	if tok.Type != token.LEFT_PAREN {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.LEFT_PAREN, tok.Type)
 	}
 
-	if token.Literal != "(" {
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "(", token.Literal)
+	if tok.Literal != "(" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "(", tok.Literal)
 	}
 
-	token = lexer.NextToken()
+	tok = lexer.NextToken()
 
-	if token.Type != token.PLUS {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.PLUS, token.Type)
+	if tok.Type != token.PLUS {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.PLUS, tok.Type)
 	}
 
-	if token.Literal != "+" {
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "+", token.Literal)
+	if tok.Literal != "+" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "+", tok.Literal)
 	}
 
-	token = lexer.NextToken()
+	tok = lexer.NextToken()
 
-	if token.Type != token.INT {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.INT, token.Type)
+	if tok.Type != token.INT {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.INT, tok.Type)
 	}
 
-	if token.Literal != "5" {
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "5", token.Literal)
+	if tok.Literal != "5" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "5", tok.Literal)
 	}
 
-	token = lexer.NextToken()
+	tok = lexer.NextToken()
 
-	if token.Type != token.INT {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.INT, token.Type)
+	if tok.Type != token.INT {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.INT, tok.Type)
 	}
 
-	if token.Literal != "2" {undefined: token.tokenType (but have TokenType) (compiler UndeclaredImportedName)undefined: token.tokenType (but have TokenType) (compiler UndeclaredImportedName)
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "2", token.Literal)
+	if tok.Literal != "2" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "2", tok.Literal)
 	}
 
-	token = lexer.NextToken()
+	tok = lexer.NextToken()
 
-	if token.Type != token.RIGHT_PAREN {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.RIGHT_PAREN, token.Type)
+	if tok.Type != token.RIGHT_PAREN {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.RIGHT_PAREN, tok.Type)
 	}
 
-	if token.Literal != ")" {
-		t.Fatalf("token.Literal wrong. expected=%q, got=%q", ")", token.Literal)
+	if tok.Literal != ")" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", ")", tok.Literal)
 	}
 
-	token = lexer.NextToken()
-	if token.Type != token.EOF {
-		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.EOF, token.Type)
+	tok = lexer.NextToken()
+	if tok.Type != token.EOF {
+		t.Fatalf("token.Type wrong. expected=%q, got=%q", token.EOF, tok.Type)
+	}
+	if tok.Literal != "" {
+		t.Fatalf("token.Literal wrong. expected=%q, got=%q", "", tok.Literal)
 	}
 }
 
@@ -88,5 +91,17 @@ func testTokenIter(t *testing.T) {
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
-	}{{token.PLUS, "+"}, {token.MINUS, "-"}, {token.INT, "5"}, {token.INT, "4"}}
+	}{{token.PLUS, "+"}, {token.MINUS, "-"}, {token.INT, "5"}, {token.INT, "4"}, {token.EOF, ""}}
+
+	lexer := NewLexer(input)
+	for i, test := range tests {
+		token := lexer.NextToken()
+		if token.Type != test.expectedType {
+			t.Fatalf("tests[%d] - token.Type wrong. expected=%q, got=%q", i, test.expectedType, token.Type)
+		}
+
+		if token.Literal != test.expectedLiteral {
+			t.Fatalf("tests[%d] - token.Literal wrong. expected=%q, got=%q", i, test.expectedLiteral, token.Literal)
+		}
+	}
 }
